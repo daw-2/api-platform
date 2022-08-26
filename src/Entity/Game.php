@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\GameCountController;
 use App\Controller\PublishController;
 use App\Repository\GameRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,6 +25,41 @@ use Symfony\Component\Validator\Constraints\Valid;
         'post' => [
             'validation_groups' => ['create:item']
         ],
+        'count' => [
+            'method' => 'GET',
+            'path' => '/games/count',
+            'controller' => GameCountController::class,
+            'pagination_enabled' => false,
+            'filters' => [],
+            'openapi_context' => [
+                'summary' => 'Get total games',
+                'parameters' => [
+                    [
+                        'in' => 'query',
+                        'name' => 'published',
+                        'schema' => [
+                            'type' => 'integer',
+                            'maximum' => 1,
+                            'minimum' => 0,
+                        ],
+                        'description' => 'Filter by published games'
+                    ]
+                ],
+                'responses' => [
+                    '200' => [
+                        'description' => 'Game count',
+                        'content' => [
+                            'application/json' => [
+                                'schema' => [
+                                    'type' => 'integer',
+                                    'example' => 1,
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
     ],
     itemOperations: [
         'get' => [
