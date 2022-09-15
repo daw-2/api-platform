@@ -84,7 +84,9 @@ use Symfony\Component\Validator\Constraints\Valid;
                         ]
                     ]
                 ]
-            ]
+            ],
+            // 'read' => false,
+            // 'write' => false,
         ]
     ]
 )]
