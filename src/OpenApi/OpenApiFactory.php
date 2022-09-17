@@ -57,6 +57,15 @@ class OpenApiFactory implements OpenApiFactoryInterface
             ],
         ]);
 
+        $schemas['Token'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'token' => [
+                    'type' => 'string',
+                ],
+            ],
+        ]);
+
         $pathItem = new PathItem(
             post: new Operation(
                 tags: ['User'],
@@ -75,7 +84,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         'content' => [
                             'application/json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/User',
+                                    '$ref' => '#/components/schemas/Token',
                                 ],
                             ],
                         ],
