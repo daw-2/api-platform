@@ -6,10 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ApiLoginController extends AbstractController
+class SecurityController extends AbstractController
 {
     #[Route('/api/login', name: 'api_login')]
-    public function index(): JsonResponse
+    public function apiLogin(): JsonResponse
     {
         $user = $this->getUser();
 
@@ -19,6 +19,6 @@ class ApiLoginController extends AbstractController
         ]);
     }
 
-    #[Route('/api/logout', name: 'api_logout')]
+    #[Route('/api/logout', name: 'app_logout')]
     public function logout() {}
 }

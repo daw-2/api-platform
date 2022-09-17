@@ -12,22 +12,22 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
-    collectionOperations: [
+    collectionOperations: [],
+    itemOperations: [
+        // 'get' => [
+        //     'controller' => NotFoundAction::class,
+        //     'openapi_context' => ['summary' => 'hidden'],
+        //     'read' => false,
+        //     'output' => false,
+        // ],
         'me' => [
             'method' => 'GET',
             'path' => '/me',
             'controller' => UserController::class,
+            'read' => false,
             'pagination_enabled' => false,
             'security' => 'is_granted("ROLE_USER")',
         ],
-    ],
-    itemOperations: [
-        'get' => [
-            'controller' => NotFoundAction::class,
-            'openapi_context' => ['summary' => 'hidden'],
-            'read' => false,
-            'output' => false,
-        ]
     ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface

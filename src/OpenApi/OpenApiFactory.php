@@ -75,6 +75,19 @@ class OpenApiFactory implements OpenApiFactoryInterface
 
         $openApi->getPaths()->addPath('/api/login', $pathItem);
 
+        $pathItem = new PathItem(
+            get: new Operation(
+                tags: ['User'],
+                responses: ['204' => []]
+            )
+        );
+
+        $openApi->getPaths()->addPath('/api/logout', $pathItem);
+
+        $pathMe = $openApi->getPaths()->getPath('/api/me');
+        $pathItem = $pathMe->withGet($pathMe->getGet()->withParameters([]));
+        $openApi->getPaths()->addPath('/api/me', $pathItem);
+
         return $openApi;
     }
 }
