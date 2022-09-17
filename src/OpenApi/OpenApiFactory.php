@@ -31,6 +31,17 @@ class OpenApiFactory implements OpenApiFactoryInterface
             'name' => 'PHPSESSID',
         ]);
 
+        $schemas['bearerAuth'] = new \ArrayObject([
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'JWT',
+        ]);
+
+        /* $openApi = $openApi->withSecurity([
+            ['cookieAuth' => []],
+            ['bearerAuth' => []]
+        ]); */
+
         $schemas = $openApi->getComponents()->getSchemas();
         $schemas['Credentials'] = new \ArrayObject([
             'type' => 'object',

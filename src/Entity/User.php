@@ -27,6 +27,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
             'read' => false,
             'pagination_enabled' => false,
             'security' => 'is_granted("ROLE_USER")',
+            'openapi_context' => ['security' => [['bearerAuth' => []]]],
         ],
     ]
 )]
