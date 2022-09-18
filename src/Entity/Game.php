@@ -133,6 +133,9 @@ class Game
     #[Groups(['read:collection', 'read:item'])]
     private $isEnabled = false;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'games')]
+    private $user;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -236,6 +239,18 @@ class Game
     public function setIsEnabled(bool $isEnabled): self
     {
         $this->isEnabled = $isEnabled;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
