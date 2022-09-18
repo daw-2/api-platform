@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource()]
@@ -22,7 +22,7 @@ class Category
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['read:Game', 'write:Game'])]
-    #[Length(min: 5, groups: ['create:item'])]
+    #[Assert\NotBlank(groups: ['create:item']), Assert\Length(min: 5, groups: ['create:item'])]
     private $name;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Game::class)]

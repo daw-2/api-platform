@@ -10,8 +10,7 @@ use App\Controller\PublishController;
 use App\Repository\GameRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\Valid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[ApiResource(
@@ -101,7 +100,7 @@ class Game
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(['read:collection', 'read:item', 'write:item', 'put:item'])]
-    #[Length(min: 5, groups: ['create:item'])]
+    #[Assert\NotBlank(groups: ['create:item']), Assert\Length(min: 5, groups: ['create:item'])]
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -126,7 +125,7 @@ class Game
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'games', cascade: ['persist'])]
     #[Groups(['read:item', 'write:item', 'put:item'])]
-    #[Valid()]
+    #[Assert\Valid]
     private $category;
 
     #[ORM\Column(type: 'boolean')]

@@ -3,8 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     collectionOperations: ['get', 'post'],
@@ -15,11 +14,10 @@ class Dependency
 {
     protected $id;
 
-    #[NotBlank()]
-    #[Length(min: 2)]
+    #[Assert\NotBlank, Assert\Length(min: 2)]
     public $name;
 
-    #[NotBlank()]
+    #[Assert\NotBlank]
     public $version;
 
     public function __construct($name, $version)
