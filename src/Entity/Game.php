@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Attributes\ApiSecurityGroups;
 use App\Controller\GameCountController;
 use App\Controller\PublishController;
 use App\Repository\GameRepository;
@@ -14,9 +15,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[ApiResource(
-    paginationItemsPerPage: 2,
+    paginationItemsPerPage: 15,
     paginationClientItemsPerPage: true,
-    paginationMaximumItemsPerPage: 2,
+    paginationMaximumItemsPerPage: 15,
     normalizationContext: ['groups' => ['read:collection']],
     denormalizationContext: ['groups' => ['write:item', 'write:Game']],
     collectionOperations: [
@@ -90,6 +91,10 @@ use Symfony\Component\Validator\Constraints as Assert;
     ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'title' => 'partial'])]
+#[ApiSecurityGroups([
+    'edit' => ['read:collection:owner'],
+    'ROLE_USER' => ['read:collection:user']
+])]
 class Game
 {
     #[ORM\Id]
@@ -129,7 +134,7 @@ class Game
     private $category;
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(['read:collection:user', 'read:item'])]
+    #[Groups(['read:collection:owner', 'read:item'])]
     private $isEnabled = false;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'games')]
