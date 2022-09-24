@@ -104,7 +104,7 @@ class Game
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:collection', 'read:item', 'write:item'])]
+    #[Groups(['read:collection:user', 'read:item', 'write:item'])]
     private $slug;
 
     #[ORM\Column(type: 'text')]
@@ -129,7 +129,7 @@ class Game
     private $category;
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(['read:collection', 'read:item'])]
+    #[Groups(['read:collection:user', 'read:item'])]
     private $isEnabled = false;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'games')]
