@@ -23,12 +23,12 @@ use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
     paginationItemsPerPage: 15,
     paginationClientItemsPerPage: true,
     paginationMaximumItemsPerPage: 15,
-    normalizationContext: ['groups' => ['read:collection']],
-    denormalizationContext: ['groups' => ['write:item', 'write:Game']],
+    normalizationContext: ['groups' => ['game:read']],
+    denormalizationContext: ['groups' => ['game:write']],
     collectionOperations: [
         'get',
         'post' => [
-            'validation_groups' => ['create:item']
+            'validation_groups' => ['game:create']
         ],
         'count' => [
             'method' => 'GET',
@@ -68,10 +68,10 @@ use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
     ],
     itemOperations: [
         'get' => [
-            'normalization_context' => ['groups' => ['read:item', 'read:Game']]
+            'normalization_context' => ['groups' => ['game:read:item']]
         ],
         'put' => [
-            'denormalization_context' => ['groups' => ['put:item']]
+            'denormalization_context' => ['groups' => ['game:put']]
         ],
         'patch',
         'delete',
@@ -123,56 +123,56 @@ use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
 )]
 #[ApiFilter(SearchFilter::class, properties: ['id' => 'exact', 'title' => 'partial'])]
 #[ApiSecurityGroups([
-    'edit' => ['read:collection:owner'],
-    'ROLE_USER' => ['read:collection:user']
+    'edit' => ['game:read:owner'],
+    'ROLE_USER' => ['game:read:user']
 ])]
 class Game
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:collection', 'read:item'])]
+    #[Groups(['game:read', 'game:read:item'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:collection', 'read:item', 'write:item', 'put:item'])]
-    #[Assert\NotBlank(groups: ['create:item']), Assert\Length(min: 5, groups: ['create:item'])]
+    #[Groups(['game:read', 'game:read:item', 'game:write', 'game:put', 'category:read'])]
+    #[Assert\NotBlank(groups: ['game:create']), Assert\Length(min: 5, groups: ['game:create'])]
     private $title;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:collection:user', 'read:item', 'write:item'])]
+    #[Groups(['game:read:user', 'game:read:item', 'game:write'])]
     private $slug;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['read:item', 'write:item'])]
+    #[Groups(['game:read:item', 'game:write'])]
     private $content;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Groups(['read:collection', 'read:item', 'write:item'])]
+    #[Groups(['game:read', 'game:read:item', 'game:write'])]
     private $image;
 
     #[UploadableField(mapping: 'games', fileNameProperty: 'image')]
-    #[Groups(['write:item'])]
+    #[Groups(['game:write'])]
     private $file;
 
-    #[Groups(['read:collection', 'read:item'])]
+    #[Groups(['game:read', 'game:read:item'])]
     public $contentUrl;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Groups(['read:collection', 'read:item'])]
+    #[Groups(['game:read', 'game:read:item'])]
     private $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Groups(['read:collection', 'read:item'])]
+    #[Groups(['game:read', 'game:read:item'])]
     private $updatedAt;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'games', cascade: ['persist'])]
-    #[Groups(['read:item', 'write:item', 'put:item'])]
+    #[Groups(['game:read:item', 'game:write', 'game:put'])]
     #[Assert\Valid]
     private $category;
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(['read:collection:owner', 'read:item'])]
+    #[Groups(['game:read:owner'])]
     private $isEnabled = false;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'games')]

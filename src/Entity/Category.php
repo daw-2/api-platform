@@ -11,21 +11,25 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['category:read']],
+    denormalizationContext: ['groups' => ['category:write']],
+)]
 class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['read:Game'])]
+    #[Groups(['category:read', 'game:read'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(['read:Game', 'write:Game'])]
-    #[Assert\NotBlank(groups: ['create:item']), Assert\Length(min: 5, groups: ['create:item'])]
+    #[Groups(['category:read', 'category:write', 'game:read', 'game:write'])]
+    #[Assert\NotBlank(groups: ['game:create']), Assert\Length(min: 5, groups: ['game:create'])]
     private $name;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Game::class)]
+    #[Groups(['category:read'])]
     private $games;
 
     public function __construct()
