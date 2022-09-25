@@ -98,6 +98,23 @@ use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
             'path' => '/games/{id}/image',
             'deserialize' => false,
             'controller' => GameImageController::class,
+            'openapi_context' => [
+                'requestBody' => [
+                    'content' => [
+                        'multipart/form-data' => [
+                            'schema' => [
+                                'type' => 'object', 
+                                'properties' => [
+                                    'file' => [
+                                        'type' => 'string', 
+                                        'format' => 'binary'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
         ]
     ]
 )]
@@ -133,6 +150,9 @@ class Game
 
     #[UploadableField(mapping: 'games', fileNameProperty: 'image')]
     private $file;
+
+    #[Groups(['read:collection', 'read:item'])]
+    public $contentUrl;
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Groups(['read:collection', 'read:item'])]
