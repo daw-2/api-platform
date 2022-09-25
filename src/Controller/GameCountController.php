@@ -11,5 +11,5 @@ class GameCountController extends AbstractController
     public function __invoke(Request $request, GameRepository $repository): int
     {
         return $repository->count(['isEnabled' => (bool) $request->get('published')]);
-    }   
+    }
 }

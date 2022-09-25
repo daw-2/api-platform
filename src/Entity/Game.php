@@ -72,7 +72,7 @@ use Symfony\Component\Validator\Constraints as Assert;
         'delete',
         'publish' => [
             'method' => 'POST',
-            'path' => '/posts/{id}/publish',
+            'path' => '/games/{id}/publish',
             'controller' => PublishController::class,
             'openapi_context' => [
                 'summary' => 'Publish a Game resource',
