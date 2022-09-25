@@ -28,9 +28,9 @@ class CurrentUserExtension implements QueryCollectionExtensionInterface, QueryIt
     private function addWhere(QueryBuilder $queryBuilder, string $resourceClass)
     {
         if ($resourceClass === Game::class && $user = $this->security->getUser()) {
-            $alias = $queryBuilder->getRootAliases()[0];
+            /* $alias = $queryBuilder->getRootAliases()[0];
             $queryBuilder->andWhere($alias.'.user = :current_user')
-                ->setParameter('current_user', $user->getId());
+                ->setParameter('current_user', $user->getId()); */
         }
     }
 }

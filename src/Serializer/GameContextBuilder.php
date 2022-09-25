@@ -20,7 +20,7 @@ class GameContextBuilder implements SerializerContextBuilderInterface
         $resourceClass = $context['resource_class'] ?? null;
 
         if ($resourceClass === Game::class && isset($context['groups']) && $this->authorizationChecker->isGranted('ROLE_USER')) {
-            $context['groups'][] = 'read:collection:user';
+            // $context['groups'][] = 'read:collection:user';
         }
 
         return $context;

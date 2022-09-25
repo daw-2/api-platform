@@ -10,6 +10,7 @@ class GameImageController extends AbstractController
 {
     public function __invoke(Game $game, Request $request)
     {
+        return $game;
         $game->setFile($request->files->get('image'));
 
         return $game;

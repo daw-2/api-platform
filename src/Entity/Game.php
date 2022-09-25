@@ -96,7 +96,10 @@ use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
         'image' => [
             'method' => 'POST',
             'path' => '/games/{id}/image',
-            'deserialize' => false,
+            'input_formats' => [
+                'multipart' => ['multipart/form-data'],
+            ],
+            // 'deserialize' => false,
             'controller' => GameImageController::class,
             'openapi_context' => [
                 'requestBody' => [
@@ -149,6 +152,7 @@ class Game
     private $image;
 
     #[UploadableField(mapping: 'games', fileNameProperty: 'image')]
+    #[Groups(['write:item'])]
     private $file;
 
     #[Groups(['read:collection', 'read:item'])]
