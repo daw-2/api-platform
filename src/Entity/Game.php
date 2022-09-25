@@ -7,13 +7,18 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Attributes\ApiSecurityGroups;
 use App\Controller\GameCountController;
+use App\Controller\GameImageController;
 use App\Controller\PublishController;
 use App\Repository\GameRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation\Uploadable;
+use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
 
 #[ORM\Entity(repositoryClass: GameRepository::class)]
+#[Uploadable]
 #[ApiResource(
     paginationItemsPerPage: 15,
     paginationClientItemsPerPage: true,
@@ -87,6 +92,12 @@ use Symfony\Component\Validator\Constraints as Assert;
             ],
             // 'read' => false,
             // 'write' => false,
+        ],
+        'image' => [
+            'method' => 'POST',
+            'path' => '/games/{id}/image',
+            'deserialize' => false,
+            'controller' => GameImageController::class,
         ]
     ]
 )]
@@ -119,6 +130,9 @@ class Game
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(['read:collection', 'read:item', 'write:item'])]
     private $image;
+
+    #[UploadableField(mapping: 'games', fileNameProperty: 'image')]
+    private $file;
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Groups(['read:collection', 'read:item'])]
@@ -195,6 +209,19 @@ class Game
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFile(?File $file): self
+    {
+        $this->file = $file;
+        $this->setUpdatedAt(new \DateTimeImmutable());
 
         return $this;
     }
