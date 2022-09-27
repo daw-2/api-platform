@@ -20,9 +20,10 @@ use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[Uploadable]
 #[ApiResource(
-    paginationItemsPerPage: 15,
+    attributes: ['order' => ['createdAt' => 'DESC']],
+    paginationItemsPerPage: 3,
     paginationClientItemsPerPage: true,
-    paginationMaximumItemsPerPage: 15,
+    paginationMaximumItemsPerPage: 3,
     normalizationContext: ['groups' => ['game:read']],
     denormalizationContext: ['groups' => ['game:write']],
     collectionOperations: [
@@ -176,6 +177,7 @@ class Game
     private $isEnabled = false;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'games')]
+    #[Groups(['game:read', 'game:read:item'])]
     private $user;
 
     public function __construct()
