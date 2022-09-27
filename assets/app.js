@@ -10,3 +10,9 @@ import './styles/app.css';
 
 // start the Stimulus application
 import './bootstrap';
+
+import { createRoot } from 'react-dom/client';
+import App from './App.jsx';
+
+const root = createRoot(document.querySelector('#app'));
+root.render(<App />);
