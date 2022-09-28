@@ -20,7 +20,7 @@ use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[Uploadable]
 #[ApiResource(
-    attributes: ['order' => ['createdAt' => 'DESC']],
+    order: ['createdAt' => 'DESC'],
     paginationItemsPerPage: 3,
     paginationClientItemsPerPage: true,
     paginationMaximumItemsPerPage: 3,
