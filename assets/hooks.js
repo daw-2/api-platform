@@ -29,8 +29,8 @@ export function useFetch(url) {
             }
         }).catch(
             error => error.json().then(data => console.error(data))
-        ).finally(() => setLoading(false))
+        ).finally(() => setLoading(false));
     }, [url, next]);
 
-    return { data, total, loading, load, next: next !== null };
+    return { data, total, loading, load, next: next !== null, setData };
 }
