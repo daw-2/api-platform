@@ -146,6 +146,7 @@ class Game
 
     #[ORM\Column(type: 'text')]
     #[Groups(['game:read:item', 'game:write'])]
+    #[Assert\NotBlank(groups: ['game:create'])]
     private $content;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

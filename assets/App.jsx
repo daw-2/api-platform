@@ -6,7 +6,7 @@ const Game = React.memo(({game}) => {
 
     return (
         <div className="border rounded-lg">
-            <img src={game.contentUrl} alt={game.title} className="w-full h-64 object-cover rounded-t-lg" />
+            {game.image && <img src={game.contentUrl} alt={game.title} className="w-full h-64 object-cover rounded-t-lg" />}
             <h2 className="text-center my-4 text-lg">
                 {game.title}
                 {game.user && <span> par {game.user.email}</span>}

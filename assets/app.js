@@ -14,5 +14,5 @@ import './bootstrap';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 
-const root = createRoot(document.querySelector('#app'));
-root.render(<App />);
+const app = document.querySelector('#app');
+createRoot(app).render(<App {...(app.dataset)} />);

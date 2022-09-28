@@ -7,12 +7,13 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\Normalizer\ContextAwareDenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerAwareTrait;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class UserDenormalizer implements ContextAwareDenormalizerInterface, DenormalizerAwareInterface
 {
     use DenormalizerAwareTrait;
 
-    public function __construct(private Security $security)
+    public function __construct(private Security $security, private SluggerInterface $slugger)
     {
     }
 
@@ -25,7 +26,13 @@ class UserDenormalizer implements ContextAwareDenormalizerInterface, Denormalize
     {
         $data['already_called_user'] = true;
         $object = $this->denormalizer->denormalize($data, $type, $format, $context);
-        $object->setUser($this->security->getUser());
+
+        if (! $object->getId()) {
+            $object->setUser($this->security->getUser());
+            $object->setSlug(
+                $this->slugger->slug($object->getTitle() ?? '')->lower()
+            );
+        }
 
         return $object;
     }
