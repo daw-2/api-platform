@@ -61,7 +61,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
     public function start(Request $request, AuthenticationException $authException = null): Response
     {
-        if (($request->getAcceptableContentTypes()[0] ?? null) === 'application/json') {
+        if (($request->getAcceptableContentTypes()[0] ?? null) === 'application/ld+json') {
             return new JsonResponse(status: 401);
         }
 

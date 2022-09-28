@@ -29,7 +29,8 @@ use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
     collectionOperations: [
         'get',
         'post' => [
-            'validation_groups' => ['game:create']
+            'validation_groups' => ['game:create'],
+            'security' => 'is_granted("ROLE_USER")'
         ],
         'count' => [
             'method' => 'GET',

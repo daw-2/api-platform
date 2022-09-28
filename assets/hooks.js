@@ -34,3 +34,30 @@ export function useFetch(url) {
 
     return { data, total, loading, load, next: next !== null, setData };
 }
+
+export function useForm(url, method = 'POST', success) {
+    const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({});
+
+    const load = useCallback((data) => {
+        setLoading(true);
+
+        return request(url, method, data)
+            .then(data => data)
+            .catch(error => {
+                error.json().then(data => {
+                    if (data.violations) {
+                        setErrors(data.violations.reduce((o, violation) => {
+                            o[violation.propertyPath] = violation.message;
+    
+                            return o;
+                        }, {}));
+                    }
+                });
+
+                throw error;
+            }).finally(() => setLoading(false));
+    }, [url, method, success]);
+
+    return { loading, load, errors };
+}

@@ -15,4 +15,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 
 const app = document.querySelector('#app');
-createRoot(app).render(<App {...(app.dataset)} />);
+
+if (app) {
+    createRoot(app).render(<App {...(app.dataset)} />);
+}
