@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useFetch, useForm } from './hooks';
 
-const Game = React.memo(({ game }) => {
+const Game = React.memo(({ game, canEdit, onDelete }) => {
     let date = new Date(game.createdAt);
+    let { loading, load: loadDelete } = useFetch(game['@id'], 'DELETE');
 
     return (
         <div className="border rounded-lg">
@@ -12,6 +13,14 @@ const Game = React.memo(({ game }) => {
                 {game.user && <span> par {game.user.email}</span>}
             </h2>
             <p className="text-center mb-6">Le {date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}</p>
+            {canEdit && <div className="text-center">
+                <button className="bg-blue-500 text-white rounded-lg px-4 py-3 duration-200 hover:opacity-50 disabled:opacity-50">
+                    Modifier
+                </button>
+                <button onClick={() => loadDelete().then(() => onDelete(game))} className="bg-red-500 text-white rounded-lg px-4 py-3 duration-200 hover:opacity-50 disabled:opacity-50">
+                    Supprimer
+                </button>
+            </div>}
         </div>
     )
 });
@@ -61,7 +70,12 @@ export default function App({ user }) {
             {loading && 'Chargement...'}
 
             <div className="grid grid-cols-3 gap-3">
-                {games.map(game => <Game key={game.id} game={game} />)}
+                {games.map(game => <Game
+                    key={game.id}
+                    game={game}
+                    canEdit={game.user && user == game.user.id}
+                    onDelete={game => setGames(games => games.filter(g => g.id !== game.id))} />
+                )}
             </div>
 
             {next && (
