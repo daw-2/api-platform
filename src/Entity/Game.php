@@ -73,7 +73,9 @@ use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
             'normalization_context' => ['groups' => ['game:read:item']]
         ],
         'put' => [
-            'denormalization_context' => ['groups' => ['game:put']]
+            'denormalization_context' => ['groups' => ['game:put']],
+            'validation_groups' => ['game:create'],
+            'security' => 'is_granted("edit", object)'
         ],
         'patch',
         'delete',
@@ -146,7 +148,7 @@ class Game
     private $slug;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['game:read', 'game:read:item', 'game:write'])]
+    #[Groups(['game:read', 'game:read:item', 'game:write', 'game:put'])]
     #[Assert\NotBlank(groups: ['game:create'])]
     private $content;
 
