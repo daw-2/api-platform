@@ -6,10 +6,16 @@ export function request(url, method = 'GET', data = null) {
             'Accept': 'application/ld+json',
             'Content-Type': 'application/json'
         }
-    }).then(response => response.ok ? response.json() : Promise.reject(response));
+    }).then(response => {
+        if (response.status === 204) {
+            return null;
+        }
+
+        return response.ok ? response.json() : Promise.reject(response);
+    });
 }
 
-export function useFetch(url) {
+export function useFetch(url, method = 'GET') {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
@@ -18,11 +24,16 @@ export function useFetch(url) {
     const load = useCallback(() => {
         setLoading(true);
 
-        request(next || url).then(response => {
-            setData(data => data.concat(response['hydra:member']));
-            setTotal(response['hydra:totalItems']);
+        return request(next || url, method).then(response => {
+            if (response && response['hydra:member']) {
+                setData(data => data.concat(response['hydra:member']));
+            }
 
-            if (response['hydra:view'] && response['hydra:view']['hydra:next']) {
+            if (response && response['hydra:totalItems']) {
+                setTotal(response['hydra:totalItems']);
+            }
+
+            if (response && response['hydra:view'] && response['hydra:view']['hydra:next']) {
                 setNext(response['hydra:view']['hydra:next']);
             } else {
                 setNext(null);

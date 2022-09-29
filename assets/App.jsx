@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useFetch, useForm } from './hooks';
 
-const Game = React.memo(({game}) => {
+const Game = React.memo(({ game }) => {
     let date = new Date(game.createdAt);
 
     return (
@@ -23,7 +23,10 @@ const GameForm = React.memo(({ onGame }) => {
     let onSubmit = useCallback((event) => {
         event.preventDefault();
 
-        load({ title: title.current.value, content: content.current.value }).then(game => onGame(game));
+        load({ title: title.current.value, content: content.current.value }).then(game => {
+            onGame(game);
+            title.current.value = content.current.value = '';
+        });
     }, [load, title, content]);
 
     return (
@@ -44,10 +47,12 @@ const GameForm = React.memo(({ onGame }) => {
     );
 });
 
-export default function App({user}) {
+export default function App({ user }) {
     let { data: games, total, loading, load, next, setData: setGames } = useFetch('/api/games');
 
-    useEffect(() => load(), []);
+    useEffect(() => {
+        load();
+    }, []);
 
     return (
         <div>

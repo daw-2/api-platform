@@ -39,6 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['game:read', 'game:read:item'])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
