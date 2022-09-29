@@ -146,7 +146,7 @@ class Game
     private $slug;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['game:read:item', 'game:write'])]
+    #[Groups(['game:read', 'game:read:item', 'game:write'])]
     #[Assert\NotBlank(groups: ['game:create'])]
     private $content;
 
