@@ -1,20 +1,23 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useFetch, useForm } from './hooks';
 
-const Game = React.memo(({ game, canEdit, onDelete }) => {
+const Game = React.memo(({ game, canEdit, onDelete, onUpdate }) => {
     let date = new Date(game.createdAt);
-    let { loading, load: loadDelete } = useFetch(game['@id'], 'DELETE');
+    let { load: loadDelete } = useFetch(game['@id'], 'DELETE');
+    let [editing, setEditing] = useState(false);
 
     return (
         <div className="border rounded-lg">
             {game.image && <img src={game.contentUrl} alt={game.title} className="w-full h-64 object-cover rounded-t-lg" />}
-            <h2 className="text-center my-4 text-lg">
-                {game.title}
-                {game.user && <span> par {game.user.email}</span>}
-            </h2>
-            <p className="text-center mb-6">Le {date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}</p>
-            {canEdit && <div className="text-center">
-                <button className="bg-blue-500 text-white rounded-lg px-4 py-3 duration-200 hover:opacity-50 disabled:opacity-50">
+            {editing ? <GameForm game={game} onGame={onUpdate} onCancel={() => setEditing(e => !e)} /> : <div>
+                <h2 className="text-center my-4 text-lg">
+                    {game.title}
+                    {game.user && <span> par {game.user.email}</span>}
+                </h2>
+                <p className="text-center mb-6">Le {date.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}</p>
+            </div>}
+            {canEdit && !editing && <div className="text-center">
+                <button onClick={() => setEditing(e => !e)} className="bg-blue-500 text-white rounded-lg px-4 py-3 duration-200 hover:opacity-50 disabled:opacity-50">
                     Modifier
                 </button>
                 <button onClick={() => loadDelete().then(() => onDelete(game))} className="bg-red-500 text-white rounded-lg px-4 py-3 duration-200 hover:opacity-50 disabled:opacity-50">
@@ -25,8 +28,10 @@ const Game = React.memo(({ game, canEdit, onDelete }) => {
     )
 });
 
-const GameForm = React.memo(({ onGame }) => {
-    let { load, loading, errors } = useForm('/api/games', 'POST');
+const GameForm = React.memo(({ onGame, game = null, onCancel = null }) => {
+    let url = game ? game['@id'] : '/api/games';
+    let method = game ? 'PUT' : 'POST';
+    let { load, loading, errors } = useForm(url, method);
     let title = useRef(null);
     let content = useRef(null);
     let onSubmit = useCallback((event) => {
@@ -35,8 +40,14 @@ const GameForm = React.memo(({ onGame }) => {
         load({ title: title.current.value, content: content.current.value }).then(game => {
             onGame(game);
             title.current.value = content.current.value = '';
+            onCancel && onCancel();
         });
     }, [load, title, content]);
+
+    useEffect(() => {
+        if (game?.title && title.current) title.current.value = game.title;
+        if (game?.content && content.current) content.current.value = game.content;
+    }, [game]);
 
     return (
         <form className="mb-8" onSubmit={onSubmit}>
@@ -50,8 +61,12 @@ const GameForm = React.memo(({ onGame }) => {
             </div>
 
             <button disabled={loading} className="bg-blue-500 text-white rounded-lg px-4 py-3 duration-200 hover:opacity-50 disabled:opacity-50">
-                Ajouter
+                {game ? 'Editer' : 'Ajouter'}
             </button>
+
+            {onCancel && <button type="button" onClick={onCancel} className="bg-red-500 text-white rounded-lg px-4 py-3 duration-200 hover:opacity-50 disabled:opacity-50">
+                Annuler
+            </button>}
         </form>
     );
 });
@@ -74,7 +89,8 @@ export default function App({ user }) {
                     key={game.id}
                     game={game}
                     canEdit={game.user && user == game.user.id}
-                    onDelete={game => setGames(games => games.filter(g => g.id !== game.id))} />
+                    onDelete={game => setGames(games => games.filter(g => g.id !== game.id))}
+                    onUpdate={game => setGames(games => games.map(g => g.id === game.id ? game : g))} />
                 )}
             </div>
 
