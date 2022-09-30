@@ -29,7 +29,7 @@ route {
 		# Subscriber JWT key
 		subscriber_jwt {env.MERCURE_SUBSCRIBER_JWT_KEY} {env.MERCURE_SUBSCRIBER_JWT_ALG}
 		# Permissive configuration for the development environment
-		cors_origins *
+		cors_origins http://localhost:8000
 		publish_origins *
 		demo
 		anonymous

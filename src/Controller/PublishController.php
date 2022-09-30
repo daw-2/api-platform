@@ -18,12 +18,13 @@ class PublishController extends AbstractController
         return $data;
     }
 
-    #[Route('/publish')]
-    public function publish(HubInterface $hub)
+    #[Route('/publish/{message}/{to}')]
+    public function publish(HubInterface $hub, $message, $to)
     {
         $update = new Update(
-            '/topic/1',
-            json_encode(['status' => 'ok'])
+            ['/topic/'.$to],
+            json_encode(['message' => $message]),
+            true
         );
 
         $hub->publish($update);

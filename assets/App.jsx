@@ -76,6 +76,21 @@ export default function App({ user }) {
 
     useEffect(() => {
         load();
+
+        const hub = new URL(document.getElementById('mercure-url').textContent);
+        hub.searchParams.append('topic', '/topic/{id}');
+        const sse = new EventSource(hub, { withCredentials: true });
+        sse.onmessage = event => {
+            let data = JSON.parse(event.data);
+
+            setGames(games => games.map(g => {
+                g.title = data.message;
+
+                return g;
+            }))
+        };
+
+        return () => sse.close();
     }, []);
 
     return (
