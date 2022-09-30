@@ -20,6 +20,7 @@ use Vich\UploaderBundle\Mapping\Annotation\UploadableField;
 #[ORM\Entity(repositoryClass: GameRepository::class)]
 #[Uploadable]
 #[ApiResource(
+    mercure: 'object.getMercureOptions()',
     order: ['createdAt' => 'DESC'],
     paginationItemsPerPage: 3,
     paginationClientItemsPerPage: true,
@@ -314,5 +315,16 @@ class Game
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getMercureOptions(): array
+    {
+        $topic1 = 'http://localhost:8000/api/games/'.$this->id;
+        $topic2 = 'http://localhost:8000/user/'.$this->getUser()->getId().'/?topic='.rawurlencode($topic1);
+
+        return [
+            'private' => true,
+            'topics' => [$topic1, $topic2],
+        ];
     }
 }

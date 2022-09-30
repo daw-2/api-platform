@@ -78,16 +78,23 @@ export default function App({ user }) {
         load();
 
         const hub = new URL(document.getElementById('mercure-url').textContent);
-        hub.searchParams.append('topic', '/topic/{id}');
+        hub.searchParams.append('topic', 'http://localhost:8000/api/games/{id}');
+        hub.searchParams.append('topic', 'http://localhost:8000/user/1/{?topic}');
         const sse = new EventSource(hub, { withCredentials: true });
         sse.onmessage = event => {
             let data = JSON.parse(event.data);
 
-            setGames(games => games.map(g => {
+            setGames(games => {
+                return [];
+            });
+
+            load();
+
+            /* setGames(games => games.map(g => {
                 g.title = data.message;
 
                 return g;
-            }))
+            })); */
         };
 
         return () => sse.close();

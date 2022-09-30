@@ -14,7 +14,10 @@ class HomeController extends AbstractController
     public function index(Request $request, Authorization $authorization): Response
     {
         if ($this->getUser()) {
-            $authorization->setCookie($request, ['/topic/'.$this->getUser()->getId()]);
+            $authorization->setCookie($request, [
+                '/topic/'.$this->getUser()->getId(),
+                'http://localhost:8000/user/'.$this->getUser()->getId().'/{?topic}'
+            ]);
         }
 
         return $this->render('home.html.twig');
