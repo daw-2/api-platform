@@ -292,7 +292,7 @@ class Game
         return $this;
     }
 
-    public function isIsEnabled(): ?bool
+    public function isEnabled(): ?bool
     {
         return $this->isEnabled;
     }
