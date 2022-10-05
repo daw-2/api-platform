@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -30,6 +31,7 @@ class Category
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Game::class)]
     #[Groups(['category:read'])]
+    #[ApiSubresource()]
     private $games;
 
     public function __construct()
